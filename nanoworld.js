@@ -17,6 +17,6 @@ module.exports = {
 		});
 	},
 	wsmsg: function(ws, msg) {
-		
+		ws.send(msg);
 	}
 }
