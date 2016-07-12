@@ -1,0 +1,8 @@
+{
+  "name": "Node.js Chat Relay",
+  "description": "Very simple Websocket chat relay",
+  "repository": "https://github.com/hizkifw/nodejs-chat-relay",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["node", "chat", "websocket"],
+  "image": "heroku/nodejs"
+}

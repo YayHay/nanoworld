@@ -1,0 +1,28 @@
+{
+  "name": "nanoworld",
+  "version": "0.2.5",
+  "description": "A clone of Ameba's Pico Virtual World",
+  "engines": {
+    "node": "5.9.1"
+  },
+  "main": "handler.js",
+  "scripts": {
+    "start": "node handler.js"
+  },
+  "dependencies": {
+    "express": "4.13.3",
+    "express-ws": "*",
+	"ws": "*",
+	"php-express": "*",
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YayHay/nanoworld"
+  },
+  "keywords": [
+    "node",
+    "game",
+    "websocket"
+  ],
+  "license": "Apache"
+}
