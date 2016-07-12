@@ -9,11 +9,5 @@ var WebSocketServer = require('ws').Server,
 	nanoworld = require('./nanoworld.js');
 
 nanoworld.init(wss);
-//wss.on('connection', nanoworld.connection);
-wss.on('connection', function(ws) {
-	ws.send('Connected');
-	ws.on('message', function(msg) {
-		ws.send(msg);
-	});
-});
+wss.on('connection', nanoworld.connection);
 console.log('Server started');
