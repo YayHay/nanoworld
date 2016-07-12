@@ -1,7 +1,7 @@
 {
   "name": "nanoworld",
   "version": "0.2.5",
-  "description": "A clone of Ameba's Pico Virtual World",
+  "description": "A clone of Ameba's Pico Virtual World (server side)",
   "engines": {
     "node": "5.9.1"
   },
@@ -10,10 +10,7 @@
     "start": "node handler.js"
   },
   "dependencies": {
-    "express": "4.13.3",
-    "express-ws": "*",
-	"ws": "*",
-	"php-express": "*"
+	"ws": "*"
   },
   "repository": {
     "type": "git",
