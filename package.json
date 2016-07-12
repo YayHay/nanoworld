@@ -1,6 +1,6 @@
 {
   "name": "nanoworld",
-  "version": "0.2.5",
+  "version": "0.0.3",
   "description": "A clone of Ameba's Pico Virtual World (server side)",
   "engines": {
     "node": "5.9.1"
