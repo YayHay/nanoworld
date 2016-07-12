@@ -13,7 +13,7 @@
     "express": "4.13.3",
     "express-ws": "*",
 	"ws": "*",
-	"php-express": "*",
+	"php-express": "*"
   },
   "repository": {
     "type": "git",
