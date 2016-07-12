@@ -7,7 +7,7 @@ module.exports = {
 	},
 	connection: function(ws) {
 		ws.on('message', function(msg) {
-			this.wsmsg(ws, msg);
+			module.exports.wsmsg(ws, msg);
 		});
 		ws.send('Connected');
 	},
