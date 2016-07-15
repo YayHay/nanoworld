@@ -19,7 +19,7 @@ module.exports = {
 		});
 	},
 	wsmsg: function(ws, msg) {
-		ws.send(msg);
+		ws.send(ws.guid);
 	},
 	makeGUID: function() {
 		function s4() {
