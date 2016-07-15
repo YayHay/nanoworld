@@ -1,5 +1,5 @@
 //Main server
-var Nano = module.exports = {
+var Nano = {
 	r: {
 		fs: require('fs')
 	},
@@ -67,3 +67,5 @@ var Nano = module.exports = {
 		}
 	}
 };
+
+module.exports = Nano;
