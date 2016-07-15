@@ -1,6 +1,5 @@
 //Main server
-var Nano = module.exports = {};
-Nano = {
+var Nano = module.exports = {
 	r: {
 		fs: require('fs')
 	},
@@ -16,7 +15,7 @@ Nano = {
 		});
 		var wsId = Nano.makeGUID();
 		ws.nano = {"guid": wsId};
-		ws.send(JSON.stringify({status: "connected", id: wsId}));
+		Nano.sendPacket(ws, "connection", "success", {id: wsId});
 	},
 	broadcast: function(msg) {
 		this.wss.clients.forEach(function each(client) {
@@ -27,15 +26,19 @@ Nano = {
 		try {
 			var d = JSON.parse(ws);
 		} catch(ex) {
-			ws.send('{"status": "error", "data": "Invalid JSON"}');
+			Nano.sendPacket(ws, "packet", "error", "Invalid JSON");
 			return;
 		}
 		
 		if(d.act == "login") {
 			if(Nano.Auth.login(d.data.user, d.data.pass)) {
-				Nano.logins[d.data.user] = {"guid": ws.nano.guid};
-			}
+				Nano.logins[d.data.user] = {"guid": ws.nano.guid, "room": ""};
+				Nano.sendPacket(ws, "login", "success", "");
+			} else Nano.sendPacket(ws, "login", "fail", "");
 		}
+	},
+	sendPacket: function(ws, subj, stat, dat) {
+		ws.send(JSON.stringify({subject: subj, status: stat, data: dat}));
 	},
 	makeGUID: function() {
 		function s4() {
@@ -63,4 +66,4 @@ Nano = {
 			}
 		}
 	}
-}
+};
