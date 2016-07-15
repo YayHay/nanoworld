@@ -40,7 +40,7 @@ var Nano = {
 				if(d.data.type == "public") {
 					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/\W/g, "") + ".json", "utf8", function(err, dat) {
 						if(err) Nano.sendPacket(ws, "world", "fail", err);
-						else Nano.sendPacket(ws, "world", "success", dat);
+						else Nano.sendPacket(ws, "world", "success", JSON.parse(dat));
 					});
 				} else if(d.data.type == "home") {
 					
