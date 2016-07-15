@@ -9,8 +9,9 @@ module.exports = {
 		ws.on('message', function(msg) {
 			module.exports.wsmsg(ws, msg);
 		});
-		var wsId = 
-		ws.send(JSON.stringify({id:}));
+		var wsId = module.exports.makeGUID();
+		ws.guid = wsId;
+		ws.send(JSON.stringify({id:wsId}));
 	},
 	broadcast: function(msg) {
 		this.wss.clients.forEach(function each(client) {
