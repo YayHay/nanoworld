@@ -16,7 +16,7 @@ Nano = {
 		});
 		var wsId = Nano.makeGUID();
 		ws.nano = {"guid": wsId};
-		ws.send(JSON.stringify({id:wsId}));
+		ws.send(JSON.stringify({status: "connected", id: wsId}));
 	},
 	broadcast: function(msg) {
 		this.wss.clients.forEach(function each(client) {
@@ -27,7 +27,7 @@ Nano = {
 		try {
 			var d = JSON.parse(ws);
 		} catch(ex) {
-			ws.send('{"act": "error", "data": "Invalid JSON"}');
+			ws.send('{"status": "error", "data": "Invalid JSON"}');
 			return;
 		}
 		
