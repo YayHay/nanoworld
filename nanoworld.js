@@ -38,7 +38,7 @@ var Nano = {
 		} else if(d.act == "get") {
 			if(d.data.get == "world") {
 				if(d.data.type == "public") {
-					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/^[a-z0-9]+$/i, "") + ".json", "utf8", function(err, dat) {
+					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/\W/g, "") + ".json", "utf8", function(err, dat) {
 						if(err) Nano.sendPacket(ws, "world", "fail", err);
 						else Nano.sendPacket(ws, "world", "success", dat);
 					});
