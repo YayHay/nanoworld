@@ -9,7 +9,8 @@ module.exports = {
 		ws.on('message', function(msg) {
 			module.exports.wsmsg(ws, msg);
 		});
-		ws.send('Connected');
+		var wsId = 
+		ws.send(JSON.stringify({id:}));
 	},
 	broadcast: function(msg) {
 		this.wss.clients.forEach(function each(client) {
@@ -18,5 +19,14 @@ module.exports = {
 	},
 	wsmsg: function(ws, msg) {
 		ws.send(msg);
+	},
+	makeGUID: function() {
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000)
+				.toString(16)
+				.substring(1);
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+			s4() + '-' + s4() + s4() + s4();
 	}
 }

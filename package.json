@@ -10,7 +10,8 @@
     "start": "node handler.js"
   },
   "dependencies": {
-	"ws": "*"
+	"ws": "*",
+	"mysql": "*"
   },
   "repository": {
     "type": "git",
