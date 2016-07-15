@@ -24,9 +24,9 @@ var Nano = {
 	},
 	wsmsg: function(ws, msg) {
 		try {
-			var d = JSON.parse(ws);
+			var d = JSON.parse(msg);
 		} catch(ex) {
-			Nano.sendPacket(ws, "packet", "error", "Invalid JSON");
+			Nano.sendPacket(ws, "packet", "fail", "Invalid JSON");
 			return;
 		}
 		
@@ -35,6 +35,17 @@ var Nano = {
 				Nano.logins[d.data.user] = {"guid": ws.nano.guid, "room": ""};
 				Nano.sendPacket(ws, "login", "success", "");
 			} else Nano.sendPacket(ws, "login", "fail", "");
+		} else if(d.act == "get") {
+			if(d.data.get == "world") {
+				if(d.data.type == "public") {
+					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/^[a-z0-9]+$/i, ""), "utf8", function(err, dat) {
+						if(err) Nano.sendPacket(ws, "world", "fail", err);
+						else Nano.sendPacket(ws, "world", "success", dat);
+					});
+				} else if(d.data.type == "home") {
+					
+				}
+			}
 		}
 	},
 	sendPacket: function(ws, subj, stat, dat) {
