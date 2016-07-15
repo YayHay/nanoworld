@@ -1,16 +1,21 @@
 //Main server
-module.exports = {
+var Nano = module.exports = {};
+Nano = {
+	r: {
+		fs: require('fs')
+	},
 	wss: null,
+	logins: {},
 	
 	init: function(wss) {
 		this.wss = wss;
 	},
 	connection: function(ws) {
 		ws.on('message', function(msg) {
-			module.exports.wsmsg(ws, msg);
+			Nano.wsmsg(ws, msg);
 		});
-		var wsId = module.exports.makeGUID();
-		ws.guid = wsId;
+		var wsId = Nano.makeGUID();
+		ws.nano = {"guid": wsId};
 		ws.send(JSON.stringify({id:wsId}));
 	},
 	broadcast: function(msg) {
@@ -19,7 +24,18 @@ module.exports = {
 		});
 	},
 	wsmsg: function(ws, msg) {
-		ws.send(ws.guid);
+		try {
+			var d = JSON.parse(ws);
+		} catch(ex) {
+			ws.send('{"act": "error", "data": "Invalid JSON"}');
+			return;
+		}
+		
+		if(d.act == "login") {
+			if(Nano.Auth.login(d.data.user, d.data.pass)) {
+				Nano.logins[d.data.user] = {"guid": ws.nano.guid};
+			}
+		}
 	},
 	makeGUID: function() {
 		function s4() {
@@ -29,5 +45,22 @@ module.exports = {
 		}
 		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
 			s4() + '-' + s4() + s4() + s4();
+	},
+	
+	Auth: {
+		login: function(uname, pass) {
+			//TODO: Actual login
+			return true;
+		}
+	},
+	Game: {
+		World: {
+			getPub: function(name) {
+				
+			},
+			getRoom: function(name) {
+				
+			}
+		}
 	}
 }
