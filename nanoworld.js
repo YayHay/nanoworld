@@ -57,7 +57,7 @@ var Nano = {
 						else Nano.sendPacket(ws, "world", "success", JSON.parse(dat));
 						
 						Nano.Worlds.Public[name] = {
-							data: JSON.parse(dat);
+							data: JSON.parse(dat)
 						};
 					});
 				} else if(d.data.type == "home") {
