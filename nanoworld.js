@@ -75,7 +75,7 @@ var Nano = {
 			Nano.logins[uname].world = d.data;
 			Nano.sendPacket(ws, "enter", "success", "");
 		} else if(d.act == "list") {
-			if(d.act.list == "players") {
+			if(d.data.list == "players") {
 				var lst = [];
 				for(var uname in Nano.logins) {
 					if(Nano.logins[uname].world.type == d.data.world.type && Nano.logins[uname].world.name == d.data.world.name) {
