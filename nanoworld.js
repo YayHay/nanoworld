@@ -49,14 +49,14 @@ var Nano = {
 		} else if(d.act == "get") {
 			if(d.data.get == "world") {
 				if(d.data.type == "public") {
-					if(typeof Nano.Worlds.Public[name] === "object")
-						Nano.sendPacket(ws, "world", "success", Nano.Worlds.Public[name].data);
+					if(typeof Nano.Worlds.Public[d.data.name] === "object")
+						Nano.sendPacket(ws, "world", "success", Nano.Worlds.Public[d.data.name].data);
 					
 					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/\W/g, "") + ".json", "utf8", function(err, dat) {
 						if(err) Nano.sendPacket(ws, "world", "fail", err);
 						else Nano.sendPacket(ws, "world", "success", JSON.parse(dat));
 						
-						Nano.Worlds.Public[name] = {
+						Nano.Worlds.Public[d.data.name] = {
 							data: JSON.parse(dat)
 						};
 					});
