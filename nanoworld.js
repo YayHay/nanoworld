@@ -5,9 +5,14 @@ var Nano = {
 	},
 	wss: null,
 	logins: {},
+	Worlds: {
+		Public: {},
+		Private: {}
+	},
+	playerData: {},
 	
 	init: function(wss) {
-		this.wss = wss;
+		Nano.wss = wss;
 	},
 	connection: function(ws) {
 		ws.on('message', function(msg) {
@@ -18,7 +23,7 @@ var Nano = {
 		Nano.sendPacket(ws, "connection", "success", {id: wsId});
 	},
 	broadcast: function(msg) {
-		this.wss.clients.forEach(function each(client) {
+		Nano.wss.clients.forEach(function each(client) {
 			client.send(data);
 		});
 	},
@@ -32,19 +37,54 @@ var Nano = {
 		
 		if(d.act == "login") {
 			if(Nano.Auth.login(d.data.user, d.data.pass)) {
-				Nano.logins[d.data.user] = {"guid": ws.nano.guid, "room": ""};
+				Nano.logins[d.data.user] = {"guid": ws.nano.guid, "world": {name: "", type: ""}};
+				Nano.playerData[d.data.user] = {
+					pos: [0, 0],
+					facing: 1,
+					character: {}
+				};
+				
 				Nano.sendPacket(ws, "login", "success", "");
 			} else Nano.sendPacket(ws, "login", "fail", "");
 		} else if(d.act == "get") {
 			if(d.data.get == "world") {
 				if(d.data.type == "public") {
+					if(typeof Nano.Worlds.Public[name] === "object")
+						Nano.sendPacket(ws, "world", "success", Nano.Worlds.Public[name].data);
+					
 					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/\W/g, "") + ".json", "utf8", function(err, dat) {
 						if(err) Nano.sendPacket(ws, "world", "fail", err);
 						else Nano.sendPacket(ws, "world", "success", JSON.parse(dat));
+						
+						Nano.Worlds.Public[name] = {
+							data: JSON.parse(dat);
+						};
 					});
 				} else if(d.data.type == "home") {
 					
 				}
+			}
+		} else if(d.act == "enter") {
+			var user;
+			for(var uname in Nano.logins) {
+				if(Nano.logins[uname].guid == ws.nano.guid) {
+					user = uname;
+					break;
+				}
+			}
+			Nano.logins[uname].world = d.data;
+			Nano.sendPacket(ws, "enter", "success", "");
+		} else if(d.act == "list") {
+			if(d.act.list == "players") {
+				var lst = [];
+				for(var uname in Nano.logins) {
+					if(Nano.logins[uname].world.type == d.data.world.type && Nano.logins[uname].world.name == d.data.world.name) {
+						var a = Nano.playerData[uname];
+						a.uname = uname;
+						lst.push(a);
+					}
+				}
+				Nano.sendPacket(ws, "list", "success", lst);
 			}
 		}
 	},
@@ -61,21 +101,27 @@ var Nano = {
 			s4() + '-' + s4() + s4() + s4();
 	},
 	
+	getPlayerCharacter: function(uname) {
+		//TODO: Actual fetch by username
+		return {
+			parts: {
+				body: 1, head: 1, eyes: 1, mouth: 1, hair: 1, arms: 1, legs: 1
+			},
+			traits: {}
+		};
+	},
+	
 	Auth: {
 		login: function(uname, pass) {
 			//TODO: Actual login
 			return true;
+		},
+		signup: function(uname, pass) {
+		
 		}
 	},
 	Game: {
-		World: {
-			getPub: function(name) {
-				
-			},
-			getRoom: function(name) {
-				
-			}
-		}
+		
 	}
 };
 
