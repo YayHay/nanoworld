@@ -10,13 +10,34 @@ var Nano = {
 		Private: {}
 	},
 	playerData: {},
+	pendingDisconnect: [],
 	
 	init: function(wss) {
 		Nano.wss = wss;
+		setInterval(function() {
+			var time = new Date().getTime();
+			for(var guid in Nano.pendingDisconnect) {
+				if(Nano.pendingDisconnect[guid] < time) {
+					//User doesn't reconnect after 10 seconds
+					var uname = false;
+					for(var u in Nano.logins) {
+						if(Nano.logins[u].guid == guid) {
+							delete Nano.logins[u];
+							uname = u;
+						}
+					}
+					if(uname)
+						delete Nano.playerData[uname];
+				}
+			}
+		}, 10000);
 	},
 	connection: function(ws) {
 		ws.on('message', function(msg) {
 			Nano.wsmsg(ws, msg);
+		});
+		ws.on('close', function(e) {
+			pendingDisconnect[ws.nano.guid] = new Date().getTime() + 10000;
 		});
 		var wsId = Nano.makeGUID();
 		ws.nano = {"guid": wsId};
@@ -89,6 +110,8 @@ var Nano = {
 				}
 				Nano.sendPacket(ws, "list", "success", lst);
 			}
+		} else if(d.act == "move") {
+			
 		}
 	},
 	sendPacket: function(ws, subj, stat, dat) {
