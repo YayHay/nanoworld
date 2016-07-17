@@ -7,7 +7,7 @@ console.log('Starting server');
 var WebSocketServer = require('ws').Server,
 	wss = new WebSocketServer({port: (process.env.PORT || 5000)}),
 	nanoworld = require('./nanoworld.js'),
-	mysql = require('mysql');
+	firebase = require('firebase');
 
 nanoworld.init(wss);
 wss.on('connection', nanoworld.connection);

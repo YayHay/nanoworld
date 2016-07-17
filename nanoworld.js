@@ -122,9 +122,6 @@ var Nano = {
 		signup: function(uname, pass) {
 		
 		}
-	},
-	Game: {
-		
 	}
 };
 

@@ -11,7 +11,7 @@
   },
   "dependencies": {
 	"ws": "*",
-	"mysql": "*"
+	"firebase": "*"
   },
   "repository": {
     "type": "git",
