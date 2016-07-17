@@ -9,6 +9,11 @@ var WebSocketServer = require('ws').Server,
 	nanoworld = require('./nanoworld.js'),
 	firebase = require('firebase');
 
+firebase.initializeApp({
+	serviceAccount: JSON.parse(process.env.firebaseSA),
+	databaseURL: process.env.firebaseDB
+});
+	
 nanoworld.init(wss);
 wss.on('connection', nanoworld.connection);
 console.log('Server started');
