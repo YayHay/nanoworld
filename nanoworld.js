@@ -41,7 +41,7 @@ var Nano = {
 				Nano.playerData[d.data.user] = {
 					pos: [0, 0],
 					facing: 1,
-					character: {}
+					character: Nano.getPlayerCharacter(d.data.user)
 				};
 				
 				Nano.sendPacket(ws, "login", "success", "");
@@ -51,15 +51,18 @@ var Nano = {
 				if(d.data.type == "public") {
 					if(typeof Nano.Worlds.Public[d.data.name] === "object")
 						Nano.sendPacket(ws, "world", "success", Nano.Worlds.Public[d.data.name].data);
-					
-					Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/\W/g, "") + ".json", "utf8", function(err, dat) {
-						if(err) Nano.sendPacket(ws, "world", "fail", err);
-						else Nano.sendPacket(ws, "world", "success", JSON.parse(dat));
-						
-						Nano.Worlds.Public[d.data.name] = {
-							data: JSON.parse(dat)
-						};
-					});
+					else {
+						Nano.r.fs.readFile("./worlds/public/" + d.data.name.replace(/\W/g, "") + ".json", "utf8", function(err, dat) {
+							if(err) Nano.sendPacket(ws, "world", "fail", err);
+							else {
+								Nano.sendPacket(ws, "world", "success", JSON.parse(dat));
+								
+								Nano.Worlds.Public[d.data.name] = {
+									data: JSON.parse(dat)
+								};
+							}
+						});
+					}
 				} else if(d.data.type == "home") {
 					
 				}
