@@ -68,7 +68,8 @@ var Nano = {
 				Nano.playerData[d.data.user] = {
 					pos: [0, 0],
 					facing: 1,
-					character: Nano.getPlayerCharacter(d.data.user)
+					character: Nano.getPlayerCharacter(d.data.user),
+					uname: d.data.user
 				};
 				
 				Nano.guid2uname[ws.nano.guid] = d.data.user;
@@ -105,14 +106,21 @@ var Nano = {
 			}
 			Nano.logins[uname].world = d.data;
 			Nano.sendPacket(ws, "enter", "success", "");
+			
+			Nano.wss.forEach(function(client) {
+				var uname = Nano.guid2uname[client.nano.guid] || false;
+				if(uname) {
+					if(Nano.logins[uname].world.name == d.data.name && Nano.logins[uname].world.type == d.data.type) {
+						Nano.sendPacket(ws, "player", "joined", Nano.playerData[user]);
+					}
+				}
+			});
 		} else if(d.act == "list") {
 			if(d.data.list == "players") {
 				var lst = [];
 				for(var uname in Nano.logins) {
 					if(Nano.logins[uname].world.type == d.data.world.type && Nano.logins[uname].world.name == d.data.world.name) {
-						var a = Nano.playerData[uname];
-						a.uname = uname;
-						lst.push(a);
+						lst.push(Nano.playerData[uname]);
 					}
 				}
 				Nano.sendPacket(ws, "list", "success", lst);
