@@ -9,6 +9,7 @@ var Nano = {
 		Public: {},
 		Private: {}
 	},
+	guid2uname: {},
 	playerData: {},
 	pendingDisconnect: [],
 	
@@ -19,15 +20,12 @@ var Nano = {
 			for(var guid in Nano.pendingDisconnect) {
 				if(Nano.pendingDisconnect[guid] < time) {
 					//User doesn't reconnect after 10 seconds
-					var uname = false;
-					for(var u in Nano.logins) {
-						if(Nano.logins[u].guid == guid) {
-							delete Nano.logins[u];
-							uname = u;
-						}
-					}
-					if(uname)
+					var uname = Nano.guid2uname[guid] || false;
+					if(uname) {
 						delete Nano.playerData[uname];
+						delete Nano.logins[uname];
+						delete Nano.guid2uname[guid];
+					}
 				}
 			}
 		}, 10000);
@@ -58,14 +56,23 @@ var Nano = {
 		
 		if(d.act == "login") {
 			if(Nano.Auth.login(d.data.user, d.data.pass)) {
-				Nano.logins[d.data.user] = {"guid": ws.nano.guid, "world": {name: "", type: ""}};
+				if(typeof Nano.logins[d.data.user] === "undefined")
+					Nano.logins[d.data.user] = {"guid": ws.nano.guid, "world": {name: "", type: ""}};
+				else {
+					ws.nano.guid = Nano.logins[d.data.user].guid;
+					delete Nano.pendingDisconnect[ws.nano.guid];
+					Nano.sendPacket(ws, "login", "success", {id: ws.nano.guid});
+					
+					return;
+				}
 				Nano.playerData[d.data.user] = {
 					pos: [0, 0],
 					facing: 1,
 					character: Nano.getPlayerCharacter(d.data.user)
 				};
 				
-				Nano.sendPacket(ws, "login", "success", "");
+				Nano.guid2uname[ws.nano.guid] = d.data.user;
+				Nano.sendPacket(ws, "login", "success", {id: ws.nano.guid});
 			} else Nano.sendPacket(ws, "login", "fail", "");
 		} else if(d.act == "get") {
 			if(d.data.get == "world") {
@@ -111,6 +118,7 @@ var Nano = {
 				Nano.sendPacket(ws, "list", "success", lst);
 			}
 		} else if(d.act == "move") {
+			var u = Nano.guid2uname[ws.nano.guid];
 			
 		}
 	},
