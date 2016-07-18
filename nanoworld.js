@@ -118,8 +118,15 @@ var Nano = {
 				Nano.sendPacket(ws, "list", "success", lst);
 			}
 		} else if(d.act == "move") {
+			if(typeof d.data.pos !== "object" || d.data.pos.length > 2)
+				return Nano.sendPacket(ws, "move", "fail", "Invalid position");
+			
 			var u = Nano.guid2uname[ws.nano.guid];
 			
+			Nano.playerData[u].pos = d.data.pos;
+			Nano.wss.clients.forEach(function(client) {
+				Nano.sendPacket(client, "move", "update", {uname: u, pos: d.data.pos});
+			});
 		}
 	},
 	sendPacket: function(ws, subj, stat, dat) {
