@@ -111,7 +111,7 @@ var Nano = {
 				var uname = Nano.guid2uname[client.nano.guid] || false;
 				if(uname) {
 					if(Nano.logins[uname].world.name == d.data.name && Nano.logins[uname].world.type == d.data.type) {
-						Nano.sendPacket(ws, "player", "joined", Nano.playerData[user]);
+						Nano.sendPacket(client, "player", "joined", Nano.playerData[user]);
 					}
 				}
 			});
