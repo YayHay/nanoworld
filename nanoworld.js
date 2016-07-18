@@ -107,7 +107,7 @@ var Nano = {
 			Nano.logins[uname].world = d.data;
 			Nano.sendPacket(ws, "enter", "success", "");
 			
-			Nano.wss.forEach(function(client) {
+			Nano.wss.clients.forEach(function(client) {
 				var uname = Nano.guid2uname[client.nano.guid] || false;
 				if(uname) {
 					if(Nano.logins[uname].world.name == d.data.name && Nano.logins[uname].world.type == d.data.type) {
