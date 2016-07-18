@@ -35,7 +35,7 @@ var Nano = {
 			Nano.wsmsg(ws, msg);
 		});
 		ws.on('close', function(e) {
-			pendingDisconnect[ws.nano.guid] = new Date().getTime() + 10000;
+			Nano.pendingDisconnect[ws.nano.guid] = new Date().getTime() + 10000;
 		});
 		var wsId = Nano.makeGUID();
 		ws.nano = {"guid": wsId};
